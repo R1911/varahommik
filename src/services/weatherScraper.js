@@ -1,19 +1,20 @@
 const axios = require("axios");
 const { parseString } = require("xml2js");
+const { getDateTime } = require("../utils/dateTimeHelper");
 
-// Function to directly construct appropriate weather phrases in Estonian
-function constructWeatherPhrase(phenomenon) {
+// nahhui ilmateenistuse api inglise keeles on üldse?
+function engToEstPhrase(phenomenon) {
   const phrases = {
-    Clear: "Ilm on selge",
-    "Few clouds": "Ilm on vähese pilvisusega",
+    Clear: "Ilm on selge.",
+    "Few clouds": "Ilm on vähese pilvisusega.",
     "Scattered clouds": "Ilm on hajusa pilvisusega",
-    "Broken clouds": "Ilm on katkiste pilvedega",
-    "Light shower": "Kohati sajab kerget hoovihma",
-    "Moderate shower": "Kohati sajab mõõdukat hoovihma",
-    Rain: "Vihmane ilm",
-    Thunderstorm: "Kohati on äikeseoht",
-    Snow: "Ilm on lumine",
-    Mist: "Ilm on udune",
+    "Broken clouds": "Ilm on vahelduva pilvisusega.",
+    "Light shower": "Kohati sajab kerget hoovihma.",
+    "Moderate shower": "Kohati sajab mõõdukat hoovihma.",
+    Rain: "Ilm on vihmane.",
+    Thunderstorm: "Kohati on äikeseoht.",
+    Snow: "Sajab lund.",
+    Mist: "Ilm on udune.",
   };
 
   return phrases[phenomenon] || `Ilm on ${phenomenon.toLowerCase()}`;
@@ -26,7 +27,7 @@ async function scrapeWeatherDetails() {
     );
     const xmlData = response.data;
 
-    // Parse the XML data
+    // Parse XML
     let jsonData;
     parseString(xmlData, (err, result) => {
       if (err) {
@@ -36,7 +37,7 @@ async function scrapeWeatherDetails() {
     });
 
     const weatherDetails = jsonData.forecasts.forecast[0].day[0];
-    const phenomenonPhrase = constructWeatherPhrase(
+    const phenomenonPhrase = engToEstPhrase(
       weatherDetails.phenomenon[0]
     );
     const tempmin = parseInt(weatherDetails.tempmin[0], 10);
@@ -48,8 +49,8 @@ async function scrapeWeatherDetails() {
       tempmax: tempmax,
     };
   } catch (error) {
-    console.error("Error scraping weather details:", error);
-    throw error; // Rethrow the error to the caller
+    console.error(`${getDateTime()} Error scraping weather details:`, error);
+    throw error;
   }
 }
 

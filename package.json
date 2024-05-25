@@ -4,7 +4,6 @@
     "cron": "^3.1.7",
     "dotenv": "^16.4.5",
     "fs": "^0.0.1-security",
-    "node-cron": "^3.0.3",
     "path": "^0.12.7",
     "twitter-api-v2": "^1.17.0",
     "xml2js": "^0.6.2"
@@ -12,10 +11,9 @@
   "name": "varahommik",
   "version": "0.0.1",
   "description": "@varahommik twitterbot",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
